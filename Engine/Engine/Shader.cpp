@@ -47,6 +47,11 @@ void Uniform::Set(float x, float y, float z, float w)
 	glProgramUniform4f(Program, Location, x, y, z, w);
 }
 
+void Uniform::Set(int x)
+{
+	glProgramUniform1i(Program, Location, x);
+}
+
 void Uniform::Set(const glm::vec2& xy)
 {
 	glProgramUniform2fv(Program, Location, 1, glm::value_ptr(xy));

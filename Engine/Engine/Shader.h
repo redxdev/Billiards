@@ -23,6 +23,8 @@ public:
 	void Set(float x, float y, float z);
 	void Set(float x, float y, float z, float w);
 
+	void Set(int x);
+
 	void Set(const glm::vec2& xy);
 	void Set(const glm::vec3& xyz);
 	void Set(const glm::vec4& xyzw);

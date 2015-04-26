@@ -2,6 +2,8 @@
 
 #include "Actor.h"
 #include "../Engine/GEngine.h"
+#include "../Engine/Mesh.h"
+#include "../Engine/Shader.h"
 
 StaticMeshComponent::StaticMeshComponent(Actor* Parent, bool StartActive, StaticMesh* Mesh, ShaderProgram* Shader)
 	: Component(Parent, StartActive)

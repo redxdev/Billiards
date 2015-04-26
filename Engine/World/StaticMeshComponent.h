@@ -1,8 +1,9 @@
 #pragma once
 
 #include "Component.h"
-#include "../Engine/Mesh.h"
-#include "../Engine/Shader.h"
+
+class StaticMesh;
+class ShaderProgram;
 
 class StaticMeshComponent : public Component
 {

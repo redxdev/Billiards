@@ -90,9 +90,11 @@
   <ItemGroup>
     <ClInclude Include="Engine\Mesh.h" />
     <ClInclude Include="Engine\Shader.h" />
-    <ClInclude Include="Game\FallingObject.h" />
-    <ClInclude Include="Game\Player.h" />
+    <ClInclude Include="Game\Ball.h" />
+    <ClInclude Include="Game\Game.h" />
+    <ClInclude Include="Game\GameManager.h" />
     <ClInclude Include="Game\Setup.h" />
+    <ClInclude Include="Game\Table.h" />
     <ClInclude Include="World\Actor.h" />
     <ClInclude Include="Engine\Input.h" />
     <ClInclude Include="Engine\InputManager.h" />
@@ -119,9 +121,10 @@
   <ItemGroup>
     <ClCompile Include="Engine\Mesh.cpp" />
     <ClCompile Include="Engine\Shader.cpp" />
-    <ClCompile Include="Game\FallingObject.cpp" />
-    <ClCompile Include="Game\Player.cpp" />
+    <ClCompile Include="Game\Ball.cpp" />
+    <ClCompile Include="Game\GameManager.cpp" />
     <ClCompile Include="Game\Setup.cpp" />
+    <ClCompile Include="Game\Table.cpp" />
     <ClCompile Include="World\CameraComponent.cpp" />
     <ClCompile Include="World\Component.cpp" />
     <ClCompile Include="World\StaticMeshComponent.cpp" />
