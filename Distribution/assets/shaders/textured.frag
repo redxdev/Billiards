@@ -1,11 +1,11 @@
 #version 430
 
-in vec4
+in vec2 uv;
 uniform sampler2D textureSampler;
 
 out vec4 outColor;
 
 void main()
 {
-	outColor = texture2D(textureSampler, gl_TexCoord[0].xy);
+	outColor = texture2D(textureSampler, uv).rgba;
 }

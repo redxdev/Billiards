@@ -4,7 +4,7 @@
 extern ShaderProgram* TextureProgram;
 extern StaticMesh* TableMesh;
 
-Table::Table(ActorID Id, bool StartActive, sf::Texture* Texture)
+Table::Table(ActorID Id, bool StartActive, GLuint Texture)
 	: Actor(Id, StartActive), Texture(Texture)
 {
 	
@@ -19,9 +19,8 @@ void Table::Spawn()
 
 void Table::Draw()
 {
-	sf::Texture::bind(Texture);
+	glActiveTexture(Texture);
+	glBindTexture(GL_TEXTURE_2D, Texture);
 
 	Actor::Draw();
-
-	sf::Texture::bind(nullptr);
 }

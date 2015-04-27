@@ -11,7 +11,7 @@
 class Table : public Actor
 {
 public:
-	Table(ActorID Id, bool StartActive, sf::Texture* Texture);
+	Table(ActorID Id, bool StartActive, GLuint Texture);
 
 	virtual void Spawn() override;
 
@@ -20,5 +20,5 @@ public:
 private:
 	StaticMeshComponent* MeshComponent;
 
-	sf::Texture* Texture;
+	GLuint Texture;
 };

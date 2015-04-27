@@ -2,8 +2,13 @@
 
 #include <gl/glew.h>
 #include <SFML/Window.hpp>
+#include <SFML/Graphics.hpp>
 #include <glm/gtc/constants.hpp>
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
+// Using freeimage for image loading
+#include <FreeImage.h>
 
 #include "../Engine/Mesh.h"
 #include "../Engine/Shader.h"
@@ -12,6 +17,7 @@
 
 #include "Game.h"
 #include "Ball.h"
+#include "Table.h"
 
 ShaderProgram* ColorProgram;
 StaticMesh* BallMesh;
@@ -20,6 +26,7 @@ ShaderProgram* TextureProgram;
 StaticMesh* TableMesh;
 
 Ball* CueBall;
+Table* PoolTable;
 
 void GM_Setup()
 {
@@ -62,10 +69,60 @@ void GM_Setup()
 
 	BallMesh = new StaticMesh(vbo, vao, 50, GL_TRIANGLE_FAN);
 
+	GLuint TableTexture = 0;
+	FIBITMAP* Tex = FreeImage_Load(FREE_IMAGE_FORMAT::FIF_PNG, "assets/textures/table.png");
+	if (!Tex)
+	{
+		LOG_ERROR(GlobalLogger, "Unable to load table texture!");
+	}
+	else
+	{
+		glGenTextures(1, &TableTexture);
+		glBindTexture(GL_TEXTURE_2D, TableTexture);
+		if (FreeImage_GetBPP(Tex) == 24)
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, FreeImage_GetWidth(Tex), FreeImage_GetHeight(Tex), 0, GL_BGR, GL_UNSIGNED_BYTE, FreeImage_GetBits(Tex)); // BGR b/c freeimage
+		else
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, FreeImage_GetWidth(Tex), FreeImage_GetHeight(Tex), 0, GL_BGRA, GL_UNSIGNED_BYTE, FreeImage_GetBits(Tex)); // BGR b/c freeimage
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glGenerateMipmap(GL_TEXTURE_2D);
+
+		FreeImage_Unload(Tex);
+		Tex = nullptr;
+	}
+
+	TextureProgram = new ShaderProgram(ShaderProgram::LoadProgram("assets/shaders/textured.vert", "assets/shaders/textured.frag"));
+
+	PositionAttr = glGetAttribLocation(TextureProgram->GetProgram(), "position");
+	GLint UVAttr = glGetAttribLocation(TextureProgram->GetProgram(), "vertexUV");
+
+	float TableVerts[] = {
+		-1.f, 1.f, 0.f, 1.f,
+		-1.f, -1.f, 0.f, 0.f,
+		1.f, -1.f, 1.f, 0.f,
+		1.f, 1.f, 1.f, 1.f,
+	};
+
+	glGenBuffers(1, &vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+
+	glGenVertexArrays(1, &vao);
+	glBindVertexArray(vao);
+
+	glBufferData(GL_ARRAY_BUFFER, sizeof(TableVerts), TableVerts, GL_STATIC_DRAW);
+	glVertexAttribPointer(PositionAttr, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
+	glEnableVertexAttribArray(PositionAttr);
+	glVertexAttribPointer(UVAttr, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (GLvoid*)(2 * sizeof(float)));
+	glEnableVertexAttribArray(UVAttr);
+
+	TableMesh = new StaticMesh(vbo, vao, 4, GL_QUADS);
+
 	CueBall = W_WORLD.SpawnActor<Ball>(false); // start inactive
 	CueBall->GetMeshComponent()->SetR(1);
 	CueBall->GetMeshComponent()->SetB(1);
 	CueBall->GetMeshComponent()->SetG(1);
+
+	PoolTable = W_WORLD.SpawnActor<Table>(true, TableTexture);
 }
 
 void GM_Teardown()
