@@ -12,8 +12,8 @@ void RunEngine(int ArgC, char** ArgV)
 	BootstrapOptions Options;
 	Options.DefaultLogSinks = true;
 	Options.DontRunEngine = false;
-	Options.WindowOptions.Width = 600;
-	Options.WindowOptions.Height = 600;
+	Options.WindowOptions.Width = 800;
+	Options.WindowOptions.Height = 440;
 
 	// Create the bootstrap
 	Bootstrap Engine(ArgC, ArgV, Options);

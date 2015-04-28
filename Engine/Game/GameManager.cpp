@@ -58,7 +58,7 @@ void GM_Setup()
 	for (int i = 0; i < 50; ++i)
 	{
 		Vertices[i * 2] = cosf(glm::two_pi<float>() / 50 * i) * Scale;
-		Vertices[i * 2 + 1] = sinf(glm::two_pi<float>() / 50 * i) * Scale;
+		Vertices[i * 2 + 1] = sinf(glm::two_pi<float>() / 50 * i) * Scale * 800.f/440.f;
 	}
 
 	GLint PositionAttr = glGetAttribLocation(ColorProgram->GetProgram(), "position");
@@ -97,10 +97,13 @@ void GM_Setup()
 	GLint UVAttr = glGetAttribLocation(TextureProgram->GetProgram(), "vertexUV");
 
 	float TableVerts[] = {
-		-1.f, 1.f, 0.f, 1.f,
 		-1.f, -1.f, 0.f, 0.f,
+		-1.f, 1.f, 0.f, 1.f,
 		1.f, -1.f, 1.f, 0.f,
+
 		1.f, 1.f, 1.f, 1.f,
+		1.f, -1.f, 1.f, 0.f,
+		-1.f, 1.f, 0.f, 1.f
 	};
 
 	glGenBuffers(1, &vbo);
@@ -115,7 +118,7 @@ void GM_Setup()
 	glVertexAttribPointer(UVAttr, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (GLvoid*)(2 * sizeof(float)));
 	glEnableVertexAttribArray(UVAttr);
 
-	TableMesh = new StaticMesh(vbo, vao, 4, GL_QUADS);
+	TableMesh = new StaticMesh(vbo, vao, 6, GL_TRIANGLE_STRIP);
 
 	CueBall = W_WORLD.SpawnActor<Ball>(false); // start inactive
 	CueBall->GetMeshComponent()->SetR(1);
@@ -139,8 +142,7 @@ void GM_Tick()
 glm::vec2 GetMouseCoords()
 {
 	auto Coords = sf::Mouse::getPosition(*(W_ENGINE.GetGameWindow().GetRenderWindow()));
-	auto WorldCoords = glm::vec2(Coords.x, Coords.y);
-	WorldCoords /= W_ENGINE.GetGameWindow().GetWidth();
+	auto WorldCoords = glm::vec2(Coords.x / 800.f, Coords.y / 440.f);
 	WorldCoords -= 0.5f;
 	WorldCoords *= 2;
 	WorldCoords[1] = -WorldCoords[1];
